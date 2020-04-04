@@ -14,22 +14,7 @@ typedef enum { false=0, true=1 } Flag;
 
 #define array_size(array)	( sizeof(array) / sizeof((array)[0]) )
 
-/* --- Error handling
 
- Make error() separate, with an initial Cell argument.
- Have it save the interpreter state in a list somewhere,
- along with a symbol representing next_action -- though
- what we really want is meta-access to the stacks, that
- can come later.  Actually, instead of saving it in a 
- list I think you should create a special stack frame.
- Be careful about stack- or memory-exhaustion, though.
-
- Another idea is to create a continuation object for each
- break-level.  The break loop can retry the last next_action
- call by simply returning, or substitute a value for whatever
- that action was supposed to compute by calling the current
- break-continuation, or abort by calling a higher-level continuation.
-*/
 
 #define unreachable 0
 #define UNREACHABLE assert(unreachable)
@@ -1340,12 +1325,18 @@ int main(int argc, char **argv)
     srand(time(NULL));
     setup_memory();
     install_primitives();
+    current_input_port = make_port(open_file(argv[1], "r"));
+
+  
+    expr = read(cell_port(current_input_port));
+    write_expr(expr);
+    /*
     if (argc == 1)
         driver_loop("-");
     else {
         int i;
         for (i = 1; i < argc; ++i)
             driver_loop(argv[i]);
-    }
+    }*/
     return 0;
 }
