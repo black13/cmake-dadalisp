@@ -42,12 +42,14 @@ static void *allot(size_t size)
     return result;
 }
 
+#ifndef _WIN32
 static int stricmp(const unsigned char *s1, const unsigned char *s2)
 {
   for (; *s1 && *s2 && tolower(*s1) == tolower(*s2); ++s1, ++s2)
     ;
   return tolower(*s1) - tolower(*s2);
 }
+#endif
 
 /* --- Ports */
 
@@ -1325,12 +1327,15 @@ int main(int argc, char **argv)
     srand(time(NULL));
     setup_memory();
     install_primitives();
-    current_input_port = make_port(open_file(argv[1], "r"));
+	if(argc > 1)
+	{ 
+		current_input_port = make_port(open_file(argv[1], "r"));
+		expr = read(cell_port(current_input_port));
+		write_expr(expr);
 
-  
-    expr = read(cell_port(current_input_port));
-    write_expr(expr);
-    /*
+	}
+      
+      /*
     if (argc == 1)
         driver_loop("-");
     else {
