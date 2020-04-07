@@ -430,7 +430,7 @@ static Cell string_to_symbol(const char *string)
 
 /* --- The get/put hash table */
 
-static void setup_hash_table(void)
+static void setup_hash_table_(void)
 {
     unsigned i;
     for (i = 0; i < array_size(hash_table); ++i)
@@ -476,8 +476,8 @@ static void put(Cell key1, Cell key2, Cell value)
 
 /* --- Initialization */
 
-static Cell keyword_if, keyword_lambda, keyword_setq, keyword_define, 
-            keyword_begin;
+static Cell keyword_if, keyword_lambda, keyword_setq, keyword_define;
+static Cell keyword_begin;
 
 static Cell clobbered_cont;
 static Cell user_initial_env;
@@ -505,8 +505,8 @@ static void setup_memory(void)
     uninitialized = string_to_uninterned_symbol("#uninitialized");
     set_global_value(uninitialized, uninitialized);
 
-    setup_symbol_table();
-    setup_hash_table();
+    //setup_symbol_table();
+     //setup_hash_table();
 
     the_eof_object = string_to_uninterned_symbol("#eof");
     set_global_value(string_to_symbol("the-eof-object"), the_eof_object);
@@ -1326,7 +1326,7 @@ int main(int argc, char **argv)
 {
     srand(time(NULL));
     setup_memory();
-    install_primitives();
+    //install_primitives();
 	if(argc > 1)
 	{ 
 		current_input_port = make_port(open_file(argv[1], "r"));
